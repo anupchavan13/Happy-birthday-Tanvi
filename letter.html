@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Surprise For You ✨</title>
+    <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8e1f4, #e0c3f7, #c2e6ff);
+            background-size: 400% 400%;
+            animation: gradientBackground 15s ease infinite;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 3s forwards 0.5s;
+        }
+
+        /* Header Styles */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #6a4c93;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+
+        /* Letter Section */
+        .letter-container {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(106, 76, 147, 0.3);
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .letter-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 20px;
+            box-shadow: inset 0 0 15px rgba(255, 215, 232, 0.7);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .letter {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #333;
+            position: relative;
+            z-index: 2;
+            min-height: 200px;
+        }
+
+        .video-container {
+            display: none;
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%;
+            margin-bottom: 40px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(106, 76, 147, 0.3), 0 0 30px rgba(255, 215, 232, 0.5);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Surprise Button */
+        .surprise-button-container {
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .surprise-button {
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fad0c4, #a18cd1);
+            background-size: 300% 300%;
+            animation: gradientButton 5s ease infinite;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(161, 140, 209, 0.5);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        /* Surprise Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 20px;
+            padding: 30px;
+            position: relative;
+            box-shadow: 0 0 30px rgba(255, 215, 232, 0.8);
+            text-align: center;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            color: #6a4c93;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Playlist Styling */
+        .playlist {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .playlist-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            background: rgba(240, 240, 255, 0.7);
+        }
+
+        .playlist-item img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .playlist-item-info {
+            flex-grow: 1;
+            text-align: left;
+        }
+
+        .playlist-item-play {
+            background: none;
+            border: none;
+            color: #6a4c93;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        /* Back Button */
+        .back-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border: 2px solid #6a4c93;
+            color: #6a4c93;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* Music Controls */
+        .music-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes gradientBackground {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes gradientButton {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+    </style>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <h1>For My LOVE ❤️</h1>
+        </header>
+
+        <div class="letter-container">
+            <div class="" id="typed-text"></div>
+        </div>
+
+        <div class="surprise-button-container">
+            <button class="surprise-button" id="surprise-button">
+                Click for a Surprise! 🎁
+            </button>
+        </div>
+
+        <div class="navigation">
+            <a href="javascript:history.back()" class="back-button">
+                <i class="fas fa-arrow-left"></i> Back to Birthday Cake
+            </a>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal">
+            <button class="modal-close" id="modal-close">×</button>
+
+            <div class="playlist">
+
+                <div class="playlist-item">
+                    <img src="3.jpg">
+                    <div class="playlist-item-info">Tera mera </div>
+                    <button class="playlist-item-play" onclick="playSong('song1', this)">
+                        <i class="fas fa-play"></i>
+                    </button>
+                </div>
+
+                <div class="playlist-item">
+                    <img src="1.jpg">
+                    <div class="playlist-item-info">tere Snag yarat</div>
+                    <button class="playlist-item-play" onclick="playSong('song2', this)">
+                        <i class="fas fa-play"></i>
+                    </button>
+                </div>
+
+                <div class="playlist-item">
+                    <img src="6.jpg">
+                    <div class="playlist-item-info">slow motion</div>
+                    <button class="playlist-item-play" onclick="playSong('song3', this)">
+                        <i class="fas fa-play"></i>
+                    </button>
+                </div>
+
+                <div class="playlist-item">
+                    <img src="2.jpeg">
+                    <div class="playlist-item-info">I wana be yours</div>
+                    <button class="playlist-item-play" onclick="playSong('song4', this)">
+                        <i class="fas fa-play"></i>
+                    </button>
+                </div>
+
+                <div class="playlist-item">
+                    <img src="5.jpg">
+                    <div class="playlist-item-info">Pal pal dil ke pass</div>
+                    <button class="playlist-item-play" onclick="playSong('song5', this)">
+                        <i class="fas fa-play"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="music-controls" id="music-toggle">
+        <i class="fas fa-volume-mute" id="music-icon"></i>
+    </div>
+
+    <!-- Existing audio -->
+    <audio id="click-sound" preload="auto">
+        <source src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_bb630cc098.mp3">
+    </audio>
+
+    <audio id="background-music" loop>
+        <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3">
+    </audio>
+
+    <!-- ADDED: Playlist audio -->
+    <audio id="song1" src="music/song1.mp3"></audio>
+    <audio id="song2" src="music/song2.mp3"></audio>
+    <audio id="song3" src="music/song3.mp3"></audio>
+    <audio id="song4" src="music/song4.mp3"></audio>
+    <audio id="song5" src="music/song5.mp3"></audio>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.5.1/confetti.browser.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            new Typed('#typed-text', {
+                strings: ["Happy Birthday to my love, my forever girl! You bring so much happiness and calm into my life, and I am grateful for you every day. As a final act of love, I will stop chasing you until you ask me, but remember, if no one is there for you, I will always be. I love you deeply, and from now on, please don’t play with my feelings or make fun of my love. Once you realize you love me, I will be there with you, and with your ring in my hands, ready to propose. My heart is yours forever"],
+                typeSpeed: 30
+            });
+
+            const surpriseButton = document.getElementById('surprise-button');
+            const modalOverlay = document.getElementById('modal-overlay');
+            const modalClose = document.getElementById('modal-close');
+            const clickSound = document.getElementById('click-sound');
+            const backgroundMusic = document.getElementById('background-music');
+
+            surpriseButton.addEventListener('click', function () {
+                clickSound.play();
+                modalOverlay.classList.add('active');
+                confetti({ particleCount: 100, spread: 70 });
+            });
+
+            modalClose.addEventListener('click', function () {
+                modalOverlay.classList.remove('active');
+            });
+        });
+
+        /* ===== PLAYLIST AUDIO LOGIC (ONLY ADDITION) ===== */
+        let currentSong = null;
+        let currentButton = null;
+
+        function playSong(songId, button) {
+            const song = document.getElementById(songId);
+            const bg = document.getElementById('background-music');
+
+            if (bg) bg.pause();
+
+            if (currentSong && currentSong !== song) {
+                currentSong.pause();
+                currentSong.currentTime = 0;
+                currentButton.innerHTML = '<i class="fas fa-play"></i>';
+            }
+
+            if (song.paused) {
+                song.play();
+                button.innerHTML = '<i class="fas fa-pause"></i>';
+                currentSong = song;
+                currentButton = button;
+            } else {
+                song.pause();
+                button.innerHTML = '<i class="fas fa-play"></i>';
+            }
+
+            song.onended = () => {
+                button.innerHTML = '<i class="fas fa-play"></i>';
+            };
+        }
+    </script>
+
+</body>
+
+</html>
